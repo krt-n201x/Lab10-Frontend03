@@ -1,12 +1,11 @@
 <template>
   <h1>Events For Good</h1>
-
   <div class="events">
     <div class="search-box">
-      <BaseInput 
-        v-model="keyword" 
-        type="text" 
-        label="Search..." 
+      <BaseInput
+        v-model="keyword"
+        type="text"
+        label="Search..."
         @input="updateKeyword"
       />
     </div>
@@ -37,7 +36,6 @@
 // @ is an alias to /src
 import EventCard from '@/components/EventCard.vue'
 import EventService from '@/services/EventService.js'
-
 // import axios from 'axios'
 export default {
   name: 'EventList',
@@ -57,7 +55,6 @@ export default {
       keyword: null
     }
   },
-
   // eslint-disable-next-line no-unused-vars
   beforeRouteEnter(routeTo, routeFrom, next) {
     EventService.getEvents(3, parseInt(routeTo.query.page) || 1)
@@ -72,7 +69,13 @@ export default {
       })
   },
   beforeRouteUpdate(routeTo) {
-    EventService.getEvents(3, parseInt(routeTo.query.page) || 1)
+    var queryFunction
+    if (this.keyword === '') {
+      queryFunction = EventService.getEvents(3, parseInt(routeTo.query.page) || 1)
+    } else {
+      queryFunction = EventService.getEventByKeyword(this.keyword, 3, parseInt(routeTo.query.page) || 1)
+    }
+    queryFunction
       .then((response) => {
         this.events = response.data // <-----
         this.totalEvents = response.headers['x-total-count'] // <-----
@@ -81,7 +84,7 @@ export default {
         return { name: 'NetworkError' }
       })
   },
-   methods: {
+  methods: {
     updateKeyword() {
       var queryFunction
       if (this.keyword === '') {
@@ -105,7 +108,6 @@ export default {
     hasNextPage() {
       // First, calculate total pages
       let totalPages = Math.ceil(this.totalEvents / 3) // 2 is events per page
-
       // Then check to see if the current page is less than the total pages.
       return this.page < totalPages
     }
@@ -130,11 +132,9 @@ export default {
   text-decoration: none;
   color: #2c3e50;
 }
-
 #page-prev {
   text-align: left;
 }
-
 #page-next {
   text-align: right;
 }
