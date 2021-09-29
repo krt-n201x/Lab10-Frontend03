@@ -88,9 +88,9 @@ export default {
     updateKeyword() {
       var queryFunction
       if (this.keyword === '') {
-        queryFunction = EventService.getEvents(3, 1)
+        queryFunction = EventService.getEvents(5, 1)
       } else {
-        queryFunction = EventService.getEventByKeyword(this.keyword, 3, 1)
+        queryFunction = EventService.getEventByKeyword(this.keyword, 5, 1)
       }
       queryFunction
         .then((response) => {
